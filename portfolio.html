@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Öykü Çelik — Yazılım Geliştirici</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f5f2;
+      --ink: #1a1a18;
+      --ink-2: #5a5a56;
+      --ink-3: #9a9a94;
+      --accent: #2d5a3d;
+      --line: #dddbd6;
+      --card: #ffffff;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --mono: 'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: var(--bg);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-color: var(--line); }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--ink-2);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* SECTIONS */
+    section {
+      padding: 120px 60px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* HERO */
+    #hero {
+      padding-top: 180px;
+      padding-bottom: 100px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+    .hero-name {
+      font-family: var(--serif);
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.35s;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--ink-2);
+    }
+    .hero-desc {
+      margin-top: 32px;
+      max-width: 420px;
+      color: var(--ink-2);
+      line-height: 1.9;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.5s;
+    }
+    .hero-cta {
+      margin-top: 48px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.65s;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 12px 28px;
+      background: var(--ink);
+      color: var(--bg);
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+    .btn-ghost {
+      display: inline-block;
+      padding: 12px 28px;
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--ink-2); color: var(--ink); }
+
+    /* DIVIDER */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--line);
+      margin-bottom: 48px;
+    }
+
+    /* SECTION HEADING */
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 300;
+      color: var(--ink);
+      margin-bottom: 48px;
+      line-height: 1.2;
+    }
+
+    /* HAKKIMDA */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .about-text { color: var(--ink-2); line-height: 2; }
+    .about-text p + p { margin-top: 16px; }
+    .about-facts { display: flex; flex-direction: column; gap: 20px; }
+    .fact {
+      padding: 20px 24px;
+      border: 1px solid var(--line);
+      background: var(--card);
+    }
+    .fact-label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 6px;
+    }
+    .fact-value { color: var(--ink); font-size: 13px; }
+
+    /* EĞİTİM */
+    .edu-item {
+      padding: 32px 0;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+    }
+    .edu-item:last-child { border-bottom: 1px solid var(--line); }
+    .edu-school {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .edu-dept { color: var(--ink-2); margin-bottom: 8px; }
+    .edu-note {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 3px 10px;
+      margin-top: 4px;
+    }
+    .edu-year {
+      font-size: 12px;
+      color: var(--ink-3);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    /* STAJ */
+    .intern-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .intern-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+    }
+    .intern-company {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .intern-role {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .intern-desc { color: var(--ink-2); line-height: 1.9; margin-bottom: 24px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      border: 1px solid var(--line);
+      padding: 4px 12px;
+    }
+
+    /* BECERİLER */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+    .skill-item {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 28px 24px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .skill-item:hover { border-color: var(--ink-3); background: var(--bg); }
+    .skill-icon {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--line);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+    .skill-name {
+      font-size: 13px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .skill-desc { font-size: 11px; color: var(--ink-3); line-height: 1.7; }
+
+    /* PROJELER */
+    .projects-placeholder {
+      border: 1px dashed var(--line);
+      padding: 60px 40px;
+      text-align: center;
+    }
+    .projects-placeholder-icon {
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 300;
+      color: var(--line);
+      margin-bottom: 16px;
+    }
+    .projects-placeholder-text { color: var(--ink-3); line-height: 2; }
+
+    /* İLETİŞİM */
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .contact-text {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 300;
+      line-height: 1.4;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .contact-sub { color: var(--ink-2); line-height: 1.9; }
+    .contact-links { display: flex; flex-direction: column; gap: 16px; }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      text-decoration: none;
+      color: var(--ink);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .contact-link:hover { border-color: var(--ink-3); transform: translateX(4px); }
+    .contact-link-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 2px; }
+    .contact-link-value { font-size: 12px; color: var(--ink); }
+    .contact-arrow { margin-left: auto; color: var(--ink-3); font-size: 16px; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 32px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--ink-3);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      section { padding: 80px 24px; }
+      #hero { padding: 140px 24px 80px; }
+      .about-grid,
+      .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">Öykü Çelik</a>
+    <ul class="nav-links">
+      <li><a href="#hakkimda">Hakkımda</a></li>
+      <li><a href="#egitim">Eğitim</a></li>
+      <li><a href="#deneyim">Deneyim</a></li>
+      <li><a href="#beceriler">Beceriler</a></li>
+      <li><a href="#kulüpler">Kulüpler</a></li>
+      <li><a href="#iletisim">İletişim</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="hero-label">Yazılım Geliştirici</p>
+    <h1 class="hero-name">Öykü<br /><em>Çelik</em></h1>
+    <p class="hero-desc">
+      Bilgisayar Mühendisliği öğrencisi. Backend geliştirme,
+      nesne yönelimli programlama ve mobil uygulama geliştirme
+      alanlarında çalışıyorum.
+    </p>
+    <div class="hero-cta">
+      <a href="#deneyim" class="btn-primary">Deneyimlerim</a>
+      <a href="#iletisim" class="btn-ghost">İletişime Geç</a>
+    </div>
+  </section>
+
+  <!-- HAKKIMDA -->
+  <section id="hakkimda">
+    <div class="reveal">
+      <p class="section-label">Hakkımda</p>
+      <h2 class="section-title">Merhaba, ben Öykü</h2>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>
+          MEF Üniversitesi Bilgisayar Mühendisliği bölümünde
+          İngilizce eğitimle devam eden bir öğrenciyim. Maltepe
+          Üniversitesi'nden yatay geçişle MEF'e transfer oldum.
+        </p>
+        <p>
+          ATP Tradesoft'ta gerçekleştirdiğim staj sürecinde
+          .NET Framework ve C# ile backend geliştirme deneyimi
+          kazandım. Java ile nesne yönelimli programlama ve
+          Android Studio ile mobil uygulama geliştirme
+          alanlarında çalışmaya devam ediyorum.
+        </p>
+        <p>
+          Yazılım projelerinde temiz kod yazmayı ve
+          sürdürülebilir çözümler üretmeyi hedefliyorum.
+        </p>
+      </div>
+      <div class="about-facts">
+        <div class="fact">
+          <div class="fact-label">Üniversite</div>
+          <div class="fact-value">MEF Üniversitesi</div>
+        </div>
+        <div class="fact">
+          <div class="fact-label">Bölüm</div>
+          <div class="fact-value">Bilgisayar Mühendisliği</div>
+        </div>
+        <div class="fact">
+          <div class="fact-label">Eğitim Dili</div>
+          <div class="fact-value">İngilizce</div>
+        </div>
+        <div class="fact">
+          <div class="fact-label">Durum</div>
+          <div class="fact-value">Aktif Öğrenci</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EĞİTİM -->
+  <section id="egitim">
+    <div class="reveal">
+      <p class="section-label">Eğitim</p>
+      <h2 class="section-title">Akademik Geçmiş</h2>
+    </div>
+    <div class="reveal">
+      <div class="edu-item">
+        <div>
+          <div class="edu-school">MEF Üniversitesi, İstanbul</div>
+          <div class="edu-dept">Bilgisayar Mühendisliği — İngilizce</div>
+        </div>
+        <div class="edu-year">Eylül 2025 — Temmuz 2027</div>
+      </div>
+      <div class="edu-item">
+        <div>
+          <div class="edu-school">Maltepe Üniversitesi, İstanbul</div>
+          <div class="edu-dept">Bilgisayar Mühendisliği — İngilizce</div>
+        </div>
+        <div class="edu-year">Eylül 2022 — Temmuz 2025</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DENEYİM -->
+  <section id="deneyim">
+    <div class="reveal">
+      <p class="section-label">Deneyim</p>
+      <h2 class="section-title">Staj</h2>
+    </div>
+    <div class="intern-card reveal">
+      <div class="intern-company">ATP Tradesoft</div>
+      <div class="intern-role">Backend Geliştirici Stajyeri — Mobil &amp; Web</div>
+      <div class="intern-desc">
+        ATP Tradesoft bünyesinde mobil ve web geliştirme alanında
+        backend tarafında staj gerçekleştirdim. .NET Framework ve
+        C# teknolojilerini kullanarak backend süreçlerine katkı
+        sağladım, gerçek proje ortamında yazılım geliştirme
+        deneyimi kazandım.
+      </div>
+      <div class="tag-list">
+        <span class="tag">.NET Framework</span>
+        <span class="tag">C#</span>
+        <span class="tag">Backend</span>
+        <span class="tag">Web Geliştirme</span>
+        <span class="tag">Mobil</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BECERİLER -->
+  <section id="beceriler">
+    <div class="reveal">
+      <p class="section-label">Beceriler</p>
+      <h2 class="section-title">Teknolojiler</h2>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-item">
+        <div class="skill-icon">C#</div>
+        <div class="skill-name">C# / .NET Framework</div>
+        <div class="skill-desc">Backend geliştirme, staj deneyimi ile pekiştirilmiş</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">Jv</div>
+        <div class="skill-name">Java / OOP</div>
+        <div class="skill-desc">Nesne yönelimli programlama, tasarım örüntüleri</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">En</div>
+        <div class="skill-name">İngilizce</div>
+        <div class="skill-desc">B2 Upper-Intermediate — Akademik eğitim dili</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KULÜPLER & AKTİVİTELER -->
+  <section id="kulüpler">
+    <div class="reveal">
+      <p class="section-label">Topluluk</p>
+      <h2 class="section-title">Kulüpler &amp; Aktiviteler</h2>
+    </div>
+    <div class="reveal">
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-school">ISN — International Students Network</div>
+          <div class="edu-dept">MEF Üniversitesi &nbsp;·&nbsp; Üye</div>
+          <div class="intern-desc" style="margin-top:10px;margin-bottom:0;">
+            Dünyanın farklı yerlerinden öğrencileri bir araya getiren etkinlikler düzenleniyor.
+            Sosyalleşme, networking ve kültürel etkileşim odaklı uluslararası bir topluluk.
+          </div>
+        </div>
+        <div class="edu-year">2025 — Devam</div>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-school">Bir Adım Bin Umut</div>
+          <div class="edu-dept">MEF Üniversitesi &nbsp;·&nbsp; Üye</div>
+          <div class="intern-desc" style="margin-top:10px;margin-bottom:0;">
+            Köy okullarındaki kütüphaneleri yenileme projesiyle eğitime erişimi
+            desteklemeye çalışan sosyal sorumluluk kulübü.
+          </div>
+        </div>
+        <div class="edu-year">2025 — Devam</div>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-school">Anka Yazılım Kulübü</div>
+          <div class="edu-dept">Maltepe Üniversitesi &nbsp;·&nbsp; Yönetim Kurulu Üyesi</div>
+          <div class="intern-desc" style="margin-top:10px;margin-bottom:0;">
+            Kulübün etkinliklerini planlama ve organize etme, takım çalışmasında aktif
+            rol alma, üyelerle iletişim ve görev dağılımının sağlanması.
+          </div>
+        </div>
+        <div class="edu-year">Ara. 2024 — Tem. 2025</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROJELER -->
+  <section id="projeler">
+    <div class="reveal">
+      <p class="section-label">Projeler</p>
+      <h2 class="section-title">Çalışmalar</h2>
+    </div>
+    <div class="projects-placeholder reveal">
+      <div class="projects-placeholder-icon">{ }</div>
+      <div class="projects-placeholder-text">
+        Projeler yakında eklenecek.<br />
+        Çalışmalarım tamamlandıkça buraya ekleyeceğim.
+      </div>
+    </div>
+  </section>
+
+  <!-- İLETİŞİM -->
+  <section id="iletisim">
+    <div class="reveal">
+      <p class="section-label">İletişim</p>
+      <h2 class="section-title">Bana Ulaşın</h2>
+    </div>
+    <div class="contact-inner">
+      <div class="reveal">
+        <div class="contact-text">
+          Bir projeniz mi var?<br />Birlikte çalışalım.
+        </div>
+        <p class="contact-sub">
+          Staj fırsatları, proje iş birlikleri veya
+          herhangi bir konuda benimle iletişime geçebilirsiniz.
+        </p>
+      </div>
+      <div class="contact-links reveal">
+        <a href="mailto:oykucelik04@gmail.com" class="contact-link">
+          <div>
+            <div class="contact-link-label">E-posta</div>
+            <div class="contact-link-value">oykucelik04@gmail.com</div>
+          </div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="https://www.linkedin.com/in/oykucelik" target="_blank" class="contact-link">
+          <div>
+            <div class="contact-link-label">LinkedIn</div>
+            <div class="contact-link-value">linkedin.com/in/oykucelik</div>
+          </div>
+          <span class="contact-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2025 Öykü Çelik</span>
+    <span>Bilgisayar Mühendisliği Öğrencisi</span>
+  </footer>
+
+  <script>
+    // Scroll nav border
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
